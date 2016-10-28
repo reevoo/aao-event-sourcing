@@ -5,6 +5,7 @@ gem "activesupport"
 gem "ruby-kafka"
 
 group :development, :test do
+  gem "rake"
   gem "racksh"
   gem "shotgun"
   gem "pry-byebug"

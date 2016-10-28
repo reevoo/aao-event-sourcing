@@ -12,7 +12,7 @@ module ConversationService
     def self.init
       producer = KAFKA.async_producer(delivery_interval: 5)
 
-      Stream.from(build_consumer(:question_accepted))
+      Proud::Stream.from(build_consumer(:question_accepted))
         .trigger(EmailService.method(:request_answer)) do |event|
           {
             question: event.payload,
@@ -22,18 +22,18 @@ module ConversationService
         .trigger(ConversationStore.method(:answer_requested))
         .to(producer, topic: 'conversation.answer_requested')
 
-      Stream.from(build_consumer(:answer_accepted)).trigger(ConversationStore.method(:create_answer))
+      Proud::Stream.from(build_consumer(:answer_accepted)).trigger(ConversationStore.method(:create_answer))
     end
 
 
     def self.rebuild_store
-      Stream.from(build_consumer(:question_accepted, start_from_beginning: true))
+      Proud::Stream.from(build_consumer(:question_accepted, start_from_beginning: true))
         .trigger(ConversationStore.method(:question_accepted))
 
-      Stream.from(build_consumer(:answer_requested, start_from_beginning: true))
+      Proud::Stream.from(build_consumer(:answer_requested, start_from_beginning: true))
         .trigger(ConversationStore.method(:answer_requested))
 
-      Stream.from(build_consumer(:answer_accepted, start_from_beginning: true))
+      Proud::Stream.from(build_consumer(:answer_accepted, start_from_beginning: true))
         .trigger(ConversationStore.method(:answer_accepted))
     end
 
