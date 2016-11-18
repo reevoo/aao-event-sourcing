@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+# whole flow:
+# question_submitted
+# question_accepted (question_rejected)
+# answer_submitted
+# answer_accepted (answer_rejected)
+
+require 'conversation_service'
+require 'proud'
+require 'kafka'
+
+
+kafka = Kafka.new(seed_brokers: ['localhost:2181'])
+accepted_questions_source = Proud::Connectors::KafkaSource.new(kafka, event_type: 'conversation.question_accepted')
+accepted_answers_source = Proud::Connectors::KafkaSource.new(kafka, event_type: 'conversation.answer_accepted')
+sink = Proud::Connectors::KafkaSink.new(kafka)
+
+
+Proud::Stream.from(accepted_questions_source)
+  .transform do |event|
+    Proud::Event.new(
+      parent: event
+      type: 'conversation.answer_requested'
+      payload: {
+        question: event.payload[:question]
+        recipient: ConversationService::QuestionRecipientFinder.for(event.payload[:reviewable_context])
+      }
+    )
+  end
+  .trigger(ConversationService::Mailer.method(:request_answer)) { |event| event.payload }
+  .to(sink)
+
+
+Proud::Stream.from(accepted_answers_source)
+  .trigger(ConversationService::Store.method(:create_answer)) { |event| event.payload }
+
+
+Proud.run

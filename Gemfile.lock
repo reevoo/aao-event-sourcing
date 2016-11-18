@@ -41,12 +41,16 @@ GEM
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
     ruby-kafka (0.3.15)
+    serverengine (1.5.11)
+      sigdump (~> 0.2.2)
     shotgun (0.9.2)
       rack (>= 1.0)
+    sigdump (0.2.3)
     slop (3.6.0)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    uuidtools (2.1.5)
 
 PLATFORMS
   ruby
@@ -58,7 +62,9 @@ DEPENDENCIES
   rake
   rspec
   ruby-kafka
+  serverengine
   shotgun
+  uuidtools
 
 BUNDLED WITH
    1.11.2

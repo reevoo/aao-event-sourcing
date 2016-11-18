@@ -3,6 +3,8 @@ source "https://rubygems.org"
 
 gem "activesupport"
 gem "ruby-kafka"
+gem "serverengine"
+gem "uuidtools"
 
 group :development, :test do
   gem "rake"
