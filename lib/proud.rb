@@ -4,7 +4,7 @@ module Proud
   extend self
 
   CONFIG = {
-    heartbeat: 10,
+    heartbeat: 5,
     log: STDOUT,
     pid_path: 'proud.pid'
   }
@@ -22,10 +22,11 @@ module Proud
   end
 
   def run
-    @se = ServerEngine.create(nil, StreamGroup.new(streams), {
-      daemonize: true,
-      log: logger,
-      pid_path: CONFIG[:pid_path],
+    Thread.abort_on_exception = true
+    @se = ServerEngine.create(nil, StreamEngineGroup, {
+      daemonize: false,
+      log: CONFIG[:log],
+      # pid_path: CONFIG[:pid_path],
     })
     @se.run
   end
@@ -38,6 +39,6 @@ require 'proud/simple_transformer'
 require 'proud/source'
 require 'proud/sink'
 require 'proud/stream'
-require 'proud/stream_group'
+require 'proud/stream_engine_group'
 require 'proud/connectors/kafka_source'
 require 'proud/connectors/kafka_sink'

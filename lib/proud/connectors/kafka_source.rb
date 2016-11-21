@@ -11,7 +11,7 @@ module Proud
         @consumer.each_message do |message|
           event_attribs = JSON.parse(message.value, symbolize_names: true).slice(:id, :payload, :timestamp)
           event_attribs.merge!(
-            type: event_type,
+            type: @event_type,
             meta: {
               kafka: {
                 key:        message.key,
@@ -24,6 +24,14 @@ module Proud
 
           yield Event.new(event_attribs)
         end
+      end
+
+      def to_s
+        "Kafka source topic '#{@event_type}'"
+      end
+
+      def stop
+        @consumer.stop
       end
 
     end

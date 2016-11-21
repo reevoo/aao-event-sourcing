@@ -3,6 +3,7 @@ module Proud
     class KafkaSink < Sink
       DEFAULT_OPTIONS = {
         delivery_interval: 5,
+        delivery_threshold: 100,
       }.freeze
 
       def initialize(kafka_instance, options = {})
@@ -11,7 +12,11 @@ module Proud
 
       def handle(event)
         kafka_options = { topic: event.type }.merge(event.meta.fetch(:kafka, {}))
-        @producer.produce(event.payload, kafka_options)
+        @producer.produce(JSON.generate(event.payload), kafka_options)
+      end
+
+      def stop
+        @producer.shutdown
       end
     end
   end

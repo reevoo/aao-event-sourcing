@@ -9,8 +9,8 @@ ENV['RACK_ENV'] ||= 'development'
 
 if %w(development test).include? ENV['RACK_ENV']
   require 'pry'
-  require 'dotenv'
-  Dotenv.load(ENV['RACK_ENV'] == 'development' ? '.env' : ".env.#{ENV['RACK_ENV']}"
+  # require 'dotenv'
+  # Dotenv.load(ENV['RACK_ENV'] == 'development' ? '.env' : ".env.#{ENV['RACK_ENV']}")
 end
 
 

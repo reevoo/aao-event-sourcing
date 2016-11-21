@@ -1,16 +1,13 @@
 module Proud
-  class StreamGroup
+  module StreamEngineGroup
     @workers = []
 
-    def initialize(streams)
-      @streams = streams
+    def initialize
       @stop_flag = ServerEngine::BlockingFlag.new
     end
 
     def run
-      @streams.each do |stream|
-        stream.run
-      end
+      Proud.streams.each(&:run)
 
       until @stop_flag.wait_for_set(Proud::CONFIG[:heartbeat])
         Proud.logger.debug('Heartbeat')
@@ -19,10 +16,9 @@ module Proud
 
     def stop
       Proud.logger.info('Shutting down streams')
-      @streams.each do |stream|
-        stream.stop
-      end
+      Proud.streams.each(&:stop)
       @stop_flag.set!
+      exit
     end
 
   end

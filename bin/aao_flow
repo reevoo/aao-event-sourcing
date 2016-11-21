@@ -3,15 +3,16 @@
 # whole flow:
 # question_submitted
 # question_accepted (question_rejected)
+# answer_requested
 # answer_submitted
 # answer_accepted (answer_rejected)
 
-require 'conversation_service'
-require 'proud'
+require './lib/conversation_service'
+require './lib/proud'
 require 'kafka'
 
 
-kafka = Kafka.new(seed_brokers: ['localhost:2181'])
+kafka = Kafka.new(seed_brokers: ['localhost:9092'])
 accepted_questions_source = Proud::Connectors::KafkaSource.new(kafka, event_type: 'conversation.question_accepted')
 accepted_answers_source = Proud::Connectors::KafkaSource.new(kafka, event_type: 'conversation.answer_accepted')
 sink = Proud::Connectors::KafkaSink.new(kafka)
@@ -20,11 +21,11 @@ sink = Proud::Connectors::KafkaSink.new(kafka)
 Proud::Stream.from(accepted_questions_source)
   .transform do |event|
     Proud::Event.new(
-      parent: event
-      type: 'conversation.answer_requested'
+      parent: event,
+      type: 'conversation.answer_requested',
       payload: {
-        question: event.payload[:question]
-        recipient: ConversationService::QuestionRecipientFinder.for(event.payload[:reviewable_context])
+        question: event.payload[:question],
+        recipient: ConversationService::QuestionRecipientFinder.for(event.payload[:reviewable_context]),
       }
     )
   end

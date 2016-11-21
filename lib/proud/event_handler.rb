@@ -3,5 +3,9 @@ module Proud
     def handle(event)
       fail NotImplementedError
     end
+
+    def stop
+      # Do nothing
+    end
   end
 end

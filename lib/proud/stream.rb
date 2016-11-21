@@ -33,11 +33,20 @@ module Proud
     end
 
     def run
-      @source.each_event { |event| handle(event) }
+      @thread = Thread.new do
+        Proud.logger.info("Starting #{self}")
+        @source.each_event { |event| handle(event) }
+      end
     end
 
     def stop
-      # Nothing for now
+      @source.stop
+      @event_handlers.each(&:stop)
+      @thread.exit
+    end
+
+    def to_s
+      "Stream from #{@source}"
     end
 
     private

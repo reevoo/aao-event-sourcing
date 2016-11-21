@@ -4,7 +4,7 @@ module Proud
   class Event
     attr_reader :type, :id, :timestamp, :payload, :meta
 
-    def initialize(type:, id: nil, timestamp: nil, payload: {}, meta: {})
+    def initialize(type:, id: nil, timestamp: nil, payload: {}, meta: {}, parent: nil)
       @type = type.freeze
       @id = id || UUIDTools::UUID.random_create
       @timestamp = timestamp || DateTime.now
