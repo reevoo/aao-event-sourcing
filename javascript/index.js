@@ -5,20 +5,20 @@ const client = new kafka.Client('localhost:2181/', 'VettingService');
 // Setup our Kafka producer
 const producer = new HighLevelProducer(client);
 
-// Create vetting topic
+// Create conversation.question_accepted topic
 producer.on('ready', function() {
-  return producer.createTopics(['vetting'], false, function(err, data) {
+  return producer.createTopics(['conversation.question_accepted'], false, function(err, data) {
     if (err) {
       return console.log(err);
     } else {
-      return console.log('Topic "vetting" created successfully.')
+      return console.log('Topic "conversation.question_accepted" created successfully.')
     }
   });
 });
 
 // Setup our Kafka consumer
 const consumer = new HighLevelConsumer(client, [
-  { topic: 'vetting', offset: 0 }
+  { topic: 'conversation.question_accepted', offset: 0 }
 ]);
 
 consumer.on('message', function(event) {

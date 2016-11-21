@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "kafka:start": "kafka-server-start /usr/local/etc/kafka/server.properties",
-    "kafka:consumer": "kafka-console-consumer --zookeeper localhost:2181 --topic vetting --from-beginning",
-    "kafka:producer": "kafka-console-producer --broker-list localhost:9092 --topic vetting",
+    "kafka:consumer": "kafka-console-consumer --zookeeper localhost:2181 --topic conversation.question_accepted --from-beginning",
+    "kafka:producer": "kafka-console-producer --broker-list localhost:9092 --topic conversation.question_accepted",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
