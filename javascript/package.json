@@ -1,0 +1,18 @@
+{
+  "name": "event_sourcing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "kafka:start": "kafka-server-start /usr/local/etc/kafka/server.properties",
+    "kafka:consumer": "kafka-console-consumer --zookeeper localhost:2181 --topic vetting --from-beginning",
+    "kafka:producer": "kafka-console-producer --broker-list localhost:9092 --topic vetting",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "kafka-node": "^1.0.1"
+  }
+}
