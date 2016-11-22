@@ -11,8 +11,14 @@ module Proud
       end
 
       def handle(event)
+        message = {
+          id: event.id,
+          timestamp: event.timestamp,
+          parent: event.parent,
+          payload: event.payload,
+        }
         kafka_options = { topic: event.type }.merge(event.meta.fetch(:kafka, {}))
-        @producer.produce(JSON.generate(event.payload), kafka_options)
+        @producer.produce(JSON.generate(message), kafka_options)
       end
 
       def stop
