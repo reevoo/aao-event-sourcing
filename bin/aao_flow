@@ -29,12 +29,12 @@ Proud::Stream.from(accepted_questions_source)
       }
     )
   end
-  .trigger(ConversationService::Mailer.method(:request_answer)) { |event| event.payload }
+  .trigger(ConversationService::Mailer.method(:request_answer), &:payload)
   .to(sink)
 
 
 Proud::Stream.from(accepted_answers_source)
-  .trigger(ConversationService::Store.method(:create_answer)) { |event| event.payload }
+  .trigger(ConversationService::Store.method(:create_answer), &:payload)
 
 
 Proud.run
